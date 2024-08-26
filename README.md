@@ -1,7 +1,7 @@
-### Real Estate System
+# Real Estate System
 This repository contains the source code for a Real Estate System designed to manage and streamline the processes involved in buying, selling, and renting properties. The system provides features for property listings, user management, transaction tracking, and automated notifications.
 
-Key Features:
+### Key Features:
 
 Property Management: Add, update, and delete property listings with detailed descriptions and images.
 User Authentication: Secure login and registration for buyers, sellers, and agents.
