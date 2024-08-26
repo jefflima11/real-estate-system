@@ -11,3 +11,7 @@ This repository contains the source code for a Real Estate System designed to ma
 - Reporting: Generate reports on sales, rentals, and market trends.
 
 This project is built using Darth, Node.js, SQL Server. Contributions and suggestions are welcome!
+
+### Links:
+- Project scope (https://liveestacio-my.sharepoint.com/:w:/g/personal/202303687788_alunos_unifavip_edu_br/EXLjix1t0exFjNZGFK-iJiUBqIpm1bWL9b-ZRBbFhT-klg?e=61an03).
+- Budget (https://liveestacio-my.sharepoint.com/:w:/g/personal/202303687788_alunos_unifavip_edu_br/EclhRAzQ3w1Nq-DKyHaSXW0Bg9ey0N5jhuAMnCnCmil0vg?e=yE5baa).
