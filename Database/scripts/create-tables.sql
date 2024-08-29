@@ -61,7 +61,7 @@ CREATE SEQUENCE SEQ_ESTADO
 
 CREATE TABLE CIDADE(
 	CD_CIDADE INT PRIMARY KEY,
-	NM_CIDADE NVARCHAR NOT NULL,
+	NM_CIDADE NVARCHAR(255) NOT NULL,
 );
 
 CREATE SEQUENCE SEQ_CIDADE
@@ -96,28 +96,6 @@ CREATE SEQUENCE SEQ_RUA
 	MINVALUE 1
 	MAXVALUE 9999999
 	CACHE 10;
-
-CREATE PROCEDURE SP_INSERT_RUA
-	@NM_RUA NVARCHAR(255),
-	@NR_CEP VARCHAR(50)
-AS
-BEGIN
-	IF EXISTS (
-		SELECT 1
-		FROM DBO.RUA
-		WHERE NM_RUA = @NM_RUA
-		OR NR_CEP = @NR_CEP
-	) 
-	BEGIN 
-		RAISERROR('Já existe um registro com o mesmo nome de rua ou cep.',16,1);
-	END
-	ELSE
-	BEGIN
-		INSERT INTO DBO.RUA (CD_RUA, NM_RUA, NR_CEP)
-		VALUES (NEXT VALUE FOR SEQ_RUA, @NM_RUA, @NR_CEP);
-	END
-END;
-
 
 CREATE TABLE VAL_CONT(
 	CD_VALOR_CONTRATO INT PRIMARY KEY,
@@ -171,95 +149,97 @@ ALTER TABLE CON_REC
 ADD CONSTRAINT FK_CON_REC_CONT FOREIGN KEY (CD_CONTRATO)
 REFERENCES CONTRATOS (CD_CONTRATO);
 
-CREATE FUNCTION DBO.REMOVER_ACENTOS (@TEXTO NVARCHAR(MAX))
+CREATE OR ALTER FUNCTION dbo.FN_REMOVER_ASCENTUACAO(@string NVARCHAR(MAX))
 RETURNS NVARCHAR(MAX)
 AS
 BEGIN
-    DECLARE @RESULTADO NVARCHAR(MAX)
+    SET @string = REPLACE(@string, 'á', 'a');
+    SET @string = REPLACE(@string, 'à', 'a');
+    SET @string = REPLACE(@string, 'ã', 'a');
+    SET @string = REPLACE(@string, 'â', 'a');
+    SET @string = REPLACE(@string, 'é', 'e');
+    SET @string = REPLACE(@string, 'è', 'e');
+    SET @string = REPLACE(@string, 'ê', 'e');
+    SET @string = REPLACE(@string, 'í', 'i');
+    SET @string = REPLACE(@string, 'ì', 'i');
+    SET @string = REPLACE(@string, 'î', 'i');
+    SET @string = REPLACE(@string, 'ó', 'o');
+    SET @string = REPLACE(@string, 'ò', 'o');
+    SET @string = REPLACE(@string, 'õ', 'o');
+    SET @string = REPLACE(@string, 'ô', 'o');
+    SET @string = REPLACE(@string, 'ú', 'u');
+    SET @string = REPLACE(@string, 'ù', 'u');
+    SET @string = REPLACE(@string, 'û', 'u');
+    SET @string = REPLACE(@string, 'ç', 'c');
+    SET @string = REPLACE(@string, 'Á', 'A');
+    SET @string = REPLACE(@string, 'À', 'A');
+    SET @string = REPLACE(@string, 'Ã', 'A');
+    SET @string = REPLACE(@string, 'Â', 'A');
+    SET @string = REPLACE(@string, 'É', 'E');
+    SET @string = REPLACE(@string, 'È', 'E');
+    SET @string = REPLACE(@string, 'Ê', 'E');
+    SET @string = REPLACE(@string, 'Í', 'I');
+    SET @string = REPLACE(@string, 'Ì', 'I');
+    SET @string = REPLACE(@string, 'Î', 'I');
+    SET @string = REPLACE(@string, 'Ó', 'O');
+    SET @string = REPLACE(@string, 'Ò', 'O');
+    SET @string = REPLACE(@string, 'Õ', 'O');
+    SET @string = REPLACE(@string, 'Ô', 'O');
+    SET @string = REPLACE(@string, 'Ú', 'U');
+    SET @string = REPLACE(@string, 'Ù', 'U');
+    SET @string = REPLACE(@string, 'Û', 'U');
+    SET @string = REPLACE(@string, 'Ç', 'C');
 
-    -- SUBSTITUIR CARACTERES ACENTUADOS POR NÃO ACENTUADOS
-    SET @RESULTADO = REPLACE(@TEXTO, 'á', 'a')
-    SET @RESULTADO = REPLACE(@RESULTADO, 'à', 'a')
-    SET @RESULTADO = REPLACE(@RESULTADO, 'ã', 'a')
-    SET @RESULTADO = REPLACE(@RESULTADO, 'â', 'a')
-    SET @RESULTADO = REPLACE(@RESULTADO, 'é', 'e')
-    SET @RESULTADO = REPLACE(@RESULTADO, 'è', 'e')
-    SET @RESULTADO = REPLACE(@RESULTADO, 'ê', 'e')
-    SET @RESULTADO = REPLACE(@RESULTADO, 'í', 'i')
-    SET @RESULTADO = REPLACE(@RESULTADO, 'ì', 'i')
-    SET @RESULTADO = REPLACE(@RESULTADO, 'î', 'i')
-    SET @RESULTADO = REPLACE(@RESULTADO, 'ó', 'o')
-    SET @RESULTADO = REPLACE(@RESULTADO, 'ò', 'o')
-    SET @RESULTADO = REPLACE(@RESULTADO, 'õ', 'o')
-    SET @RESULTADO = REPLACE(@RESULTADO, 'ô', 'o')
-    SET @RESULTADO = REPLACE(@RESULTADO, 'ú', 'u')
-    SET @RESULTADO = REPLACE(@RESULTADO, 'ù', 'u')
-    SET @RESULTADO = REPLACE(@RESULTADO, 'û', 'u')
-    SET @RESULTADO = REPLACE(@RESULTADO, 'ç', 'c')
-    SET @RESULTADO = REPLACE(@RESULTADO, 'Á', 'A')
-    SET @RESULTADO = REPLACE(@RESULTADO, 'À', 'A')
-    SET @RESULTADO = REPLACE(@RESULTADO, 'Ã', 'A')
-    SET @RESULTADO = REPLACE(@RESULTADO, 'Â', 'A')
-    SET @RESULTADO = REPLACE(@RESULTADO, 'É', 'E')
-    SET @RESULTADO = REPLACE(@RESULTADO, 'È', 'E')
-    SET @RESULTADO = REPLACE(@RESULTADO, 'Ê', 'E')
-    SET @RESULTADO = REPLACE(@RESULTADO, 'Í', 'I')
-    SET @RESULTADO = REPLACE(@RESULTADO, 'Ì', 'I')
-    SET @RESULTADO = REPLACE(@RESULTADO, 'Î', 'I')
-    SET @RESULTADO = REPLACE(@RESULTADO, 'Ó', 'O')
-    SET @RESULTADO = REPLACE(@RESULTADO, 'Ò', 'O')
-    SET @RESULTADO = REPLACE(@RESULTADO, 'Õ', 'O')
-    SET @RESULTADO = REPLACE(@RESULTADO, 'Ô', 'O')
-    SET @RESULTADO = REPLACE(@RESULTADO, 'Ú', 'U')
-    SET @RESULTADO = REPLACE(@RESULTADO, 'Ù', 'U')
-    SET @RESULTADO = REPLACE(@RESULTADO, 'Û', 'U')
-    SET @RESULTADO = REPLACE(@RESULTADO, 'Ç', 'C')
-
-    RETURN @RESULTADO
+    RETURN @string;
 END;
 
-CREATE TRIGGER FORMATAR_STRINGS
-ON DBO.RUA
+CREATE OR ALTER PROCEDURE SP_INSERT_RUA
+	@NM_RUA NVARCHAR(255),
+	@NR_CEP VARCHAR(50)
+AS
+BEGIN
+	IF EXISTS (
+		SELECT 1
+		FROM DBO.RUA
+		WHERE NM_RUA = @NM_RUA
+		OR NR_CEP = @NR_CEP
+	) 
+	BEGIN 
+		RAISERROR('Já existe um registro com o mesmo nome de rua ou cep.',16,1);
+	END
+	ELSE
+	BEGIN
+		INSERT INTO DBO.RUA (CD_RUA, NM_RUA, NR_CEP)
+		VALUES (NEXT VALUE FOR SEQ_RUA, @NM_RUA, @NR_CEP);
+	END;
+END;
+
+CREATE OR ALTER TRIGGER TRG_INSERT_RUA 
+ON RUA
 AFTER INSERT
 AS
 BEGIN
-    -- Atualiza a coluna NM_RUA usando a função FORMATAR_STRINGS após a inserção
-    UPDATE r
-    SET r.NM_RUA = dbo.FORMATAR_STRINGS(i.NM_RUA)
-    FROM DBO.RUA r
-    INNER JOIN INSERTED i ON r.CD_RUA = i.CD_RUA;
+	UPDATE R
+	SET R.NM_RUA = UPPER(dbo.FN_REMOVER_ASCENTUACAO(R.NM_RUA))
+	FROM RUA R
+	INNER JOIN INSERTED I ON R.CD_RUA = I.CD_RUA;
 END;
 
-CREATE FUNCTION dbo.FORMATAR_STRINGS (@input NVARCHAR(255))
-RETURNS NVARCHAR(255)
+CREATE OR ALTER PROCEDURE SP_INSERT_CIDADE
+	@NM_CIDADE NVARCHAR(255)
 AS
 BEGIN
-    -- Exemplo de formatação: remove espaços em branco
-    RETURN LTRIM(RTRIM(@input));
+	IF EXISTS (
+		SELECT 1
+		FROM CIDADE
+		WHERE NM_CIDADE = @NM_CIDADE
+	)
+	BEGIN
+		RAISERROR('Já existr um registro com o mesmo nome de cidade.',16,1);
+	END 
+	ELSE
+	BEGIN
+		INSERT INTO CIDADE (CD_CIDADE, NM_CIDADE)
+		VALUES (NEXT VALUE FOR SEQ_CIDADE, @NM_CIDADE);
+	END;
 END;
-
-
-CREATE FUNCTION dbo.FN_FORMATAR_STRINGS (@input NVARCHAR(255))
-RETURNS NVARCHAR(255)
-AS
-BEGIN
-    -- Exemplo de formatação: remove espaços em branco
-    RETURN LTRIM(RTRIM(@input));
-END;
-
-CREATE TRIGGER FORMATAR_STRINGS
-ON DBO.RUA
-AFTER INSERT
-AS
-BEGIN
-    -- Atualiza a coluna NM_RUA usando a função FORMATAR_STRINGS após a inserção
-    UPDATE r
-    SET r.NM_RUA = dbo.FORMATAR_STRINGS(i.NM_RUA)
-    FROM DBO.RUA r
-    INNER JOIN INSERTED i ON r.CD_RUA = i.CD_RUA;
-END;
-
-
-DROP FUNCTION FORMATAR_STRINGS;
-
-exec SP_INSERT_RUA 'testetwo','';
