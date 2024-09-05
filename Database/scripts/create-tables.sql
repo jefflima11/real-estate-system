@@ -168,4 +168,18 @@ REFERENCES CLIENTE (CD_CLIENTE);
 
 ALTER TABLE VAL_CONT
 ADD CONSTRAINT FK_CONTRATOS_VALOR_CONTRATOS FOREIGN KEY(CD_CONTRATO)
-		REFERENCES CONTRATOS (CD_CONTRATO)
+		REFERENCES CONTRATOS (CD_CONTRATO);
+
+EXEC sp_addextendedproperty 
+    @name = N'MS_Description',
+    @value = N'S - Solteiro; C - Casado; E - Separado; D - Divorciado; V - Viuvo; U - Uniao estavel',
+    @level0type = N'SCHEMA', @level0name = 'dbo',
+    @level1type = N'TABLE', @level1name = 'CLIENTE',
+    @level2type = N'COLUMN', @level2name = 'TP_ESTADO_CIVIL';
+
+EXEC sp_addextendedproperty 
+    @name = N'MS_Description',
+    @value = N'R - Residencia; C - Comercial; R - Rural; O - Corretagem; F - Financiamento Imobiliario; B - Built-to-suit; E - Cessao de direitos possessorios; A - Arrendamento Rural; I - Incorporação Imobiliaria; M - Comodato; ',
+    @level0type = N'SCHEMA', @level0name = 'dbo',
+    @level1type = N'TABLE', @level1name = 'CONTRATOS',
+    @level2type = N'COLUMN', @level2name = 'TP_CONTRATO';
