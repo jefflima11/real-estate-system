@@ -1,3 +1,9 @@
+CREATE DATABASE RES;
+
+GO
+
+USE RES;
+
 /* Criação de tabelas*/
 CREATE TABLE BANCO(
 	CD_BANCO INT PRIMARY KEY,
